@@ -1,11 +1,13 @@
 import { IConnection, format } from 'mysql';
 import { IColumn } from './InformationSchema';
+import { generateTypescript } from './GenerateTypescript';
 
 export class MysqlConnection {
   constructor(private _connection: IConnection) { /* */ }
 
-  async infoColumns() {
-    return this.query<IColumn>('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
+  async generateTs(dir: string) {
+    const columns = await this.query<IColumn>('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
+    await generateTypescript(columns, dir);
   }
 
   async createSchema(name: string) {

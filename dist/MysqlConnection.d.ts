@@ -1,10 +1,9 @@
 /// <reference types="bluebird" />
 import { IConnection } from 'mysql';
-import { IColumn } from './InformationSchema';
 export declare class MysqlConnection {
     private _connection;
     constructor(_connection: IConnection);
-    infoColumns(): Promise<IColumn[]>;
+    generateTs(dir: string): Promise<void>;
     createSchema(name: string): Promise<{}[]>;
     multiQuery<T>(sql: string, insertsArray: any[], chunks?: number): Promise<void>;
     logQuery(sql: string, inserts?: any): void;

@@ -8,13 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const mysql_1 = require('mysql');
+const GenerateTypescript_1 = require('./GenerateTypescript');
 class MysqlConnection {
     constructor(_connection) {
         this._connection = _connection;
     }
-    infoColumns() {
+    generateTs(dir) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.query('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
+            const columns = yield this.query('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
+            yield GenerateTypescript_1.generateTypescript(columns, dir);
         });
     }
     createSchema(name) {

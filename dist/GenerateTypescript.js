@@ -10,11 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const typescript_formatter_1 = require('typescript-formatter');
 const fs_extra_promise_1 = require('fs-extra-promise');
 const path_1 = require('path');
-const INTERFACES = 'INTERFACES';
-const FIELDS = 'FIELDS';
 const INDEX = 'index.ts';
-const INDEXD = 'index.d.ts';
-const ABSTRACT = 'GeneratedTable';
 function mapSchemas(columns) {
     let schemas = {};
     for (let column of columns) {
@@ -50,6 +46,7 @@ function mapSchemas(columns) {
                 kv = 'Date';
                 break;
             case 'blob':
+            case 'mediumblob':
             case 'longblob':
                 kv = 'Blob';
                 break;
@@ -70,13 +67,18 @@ function mapSchemas(columns) {
                 kv = 'boolean';
                 break;
             default:
-                console.log(column);
         }
         let type = `${column.COLUMN_NAME}${optional}: ${kv};`;
         schemas[column.TABLE_SCHEMA][column.TABLE_NAME].push({ name, type });
     }
     return schemas;
 }
+function normalizeTableName(table) {
+    return 'I' + table
+        .replace(/^[a-z]/i, (m) => m.toUpperCase())
+        .replace(/_([a-z])/ig, (m, m1) => m1.toUpperCase());
+}
+exports.normalizeTableName = normalizeTableName;
 function writeTypescriptFile(filename, output) {
     return __awaiter(this, void 0, void 0, function* () {
         let result = yield typescript_formatter_1.processString('', output.trim(), {
@@ -99,46 +101,19 @@ function generateTypescript(columns, dir) {
         let schemas = mapSchemas(columns);
         for (let schema in schemas) {
             const schemaDir = path_1.resolve(DIR, schema);
-            const interfacesDir = path_1.resolve(DIR, schema, INTERFACES);
-            const fieldsDir = path_1.resolve(DIR, schema, FIELDS);
-            let outputTables = `
-      import { ${ABSTRACT} } from '../${ABSTRACT}';
-      import * as ${INTERFACES} from './${INTERFACES}';
-      import * as ${FIELDS} from './${FIELDS}';
-    `;
             let outputInterfaces = '';
-            let outputFields = '';
             for (let table in schemas[schema]) {
-                const interfaceName = `I${table}`;
+                const interfaceName = normalizeTableName(table);
                 const interfaceContent = schemas[schema][table].map(col => col.type).join('\n');
-                const fieldsArray = schemas[schema][table].map(col => `"${col.name}"`).join(', ');
                 outputInterfaces += `
         export interface ${interfaceName} {
           ${interfaceContent}
         }
       `;
-                outputFields += `
-        export const ${table} = [ ${fieldsArray} ];
-      `;
-                outputTables += `
-        export let ${table} = new ${ABSTRACT} <${INTERFACES}.${interfaceName}>(${FIELDS}.${table});
-      `;
             }
-            yield fs_extra_promise_1.ensureDirAsync(interfacesDir);
-            yield fs_extra_promise_1.ensureDirAsync(fieldsDir);
-            yield writeTypescriptFile(path_1.join(interfacesDir, INDEXD), outputInterfaces);
-            yield writeTypescriptFile(path_1.join(fieldsDir, INDEX), outputFields);
-            yield writeTypescriptFile(path_1.join(schemaDir, INDEX), outputTables);
+            yield fs_extra_promise_1.ensureDirAsync(schemaDir);
+            yield writeTypescriptFile(path_1.join(schemaDir, INDEX), outputInterfaces);
         }
-        yield writeTypescriptFile(path_1.join(DIR, `${ABSTRACT}.ts`), `
-    export class ${ABSTRACT}<T> {
-      constructor(public fields: string[]) { }
-      get(fields: string[]) {}
-      create(object: T) {}
-      update(object: T) {}
-      delete(object: T) {}
-    }
-  `);
         yield writeTypescriptFile(path_1.join(DIR, INDEX), `
     ${Object.keys(schemas).map(schema => `
       import * as ${schema} from './${schema}';
