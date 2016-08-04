@@ -3,7 +3,7 @@ import { IColumn } from './InformationSchema';
 import { writeFileAsync, removeAsync, ensureDirAsync } from 'fs-extra-promise';
 import { resolve, dirname, join } from 'path';
 
-const INDEX = 'index.ts';
+const INDEX = 'index.d.ts';
 
 interface IColumnMap {
   name: string;

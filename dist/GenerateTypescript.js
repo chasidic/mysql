@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const typescript_formatter_1 = require('typescript-formatter');
 const fs_extra_promise_1 = require('fs-extra-promise');
 const path_1 = require('path');
-const INDEX = 'index.ts';
+const INDEX = 'index.d.ts';
 function mapSchemas(columns) {
     let schemas = {};
     for (let column of columns) {
