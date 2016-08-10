@@ -35,7 +35,7 @@ class MysqlConnection {
                     .join(';\n');
                 let response = yield this.query(SQL);
                 if (notify != null) {
-                    if (notify(response, `${count}/${total}`)) {
+                    if (notify(response, `${++count}/${total}`)) {
                         break;
                     }
                 }
