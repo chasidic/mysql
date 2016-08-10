@@ -2,8 +2,10 @@ import { IConnection, format } from 'mysql';
 import { IColumn } from './InformationSchema';
 import { generateTypescript } from './GenerateTypescript';
 
+export type INotify = (res: any) => void;
+
 export class MysqlConnection {
-  constructor(private _connection: IConnection, private notify: (res: any) => void = null) { /* */ }
+  constructor(private _connection: IConnection, private notify: INotify) { /* */ }
 
   async generateTs(dir: string) {
     const columns = await this.query<IColumn>('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
