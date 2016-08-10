@@ -10,9 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const mysql_1 = require('mysql');
 const GenerateTypescript_1 = require('./GenerateTypescript');
 class MysqlConnection {
-    constructor(_connection, notify = null) {
+    constructor(_connection) {
         this._connection = _connection;
-        this.notify = notify;
     }
     generateTs(dir) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -25,16 +24,21 @@ class MysqlConnection {
             return this.query(`CREATE DATABASE IF NOT EXISTS ??`, [name]);
         });
     }
-    multiQuery(sql, insertsArray, chunks = 20) {
+    multiQuery(sql, insertsArray, chunks = 20, notify = null) {
         return __awaiter(this, void 0, void 0, function* () {
+            const total = Math.ceil(insertsArray.length / chunks);
+            let count = 0;
             for (let i = 0; i < insertsArray.length; i += chunks) {
                 let SQL = insertsArray
                     .slice(i, i + chunks)
                     .map(inserts => mysql_1.format(sql, inserts))
                     .join(';\n');
                 let response = yield this.query(SQL);
-                if (this.notify)
-                    this.notify(response);
+                if (notify != null) {
+                    if (notify(response, `${count}/${total}`)) {
+                        break;
+                    }
+                }
             }
         });
     }

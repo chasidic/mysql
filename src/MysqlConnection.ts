@@ -2,10 +2,10 @@ import { IConnection, format } from 'mysql';
 import { IColumn } from './InformationSchema';
 import { generateTypescript } from './GenerateTypescript';
 
-export type INotify = (res: any) => void;
+export type INotify = (response: any, progress: string) => boolean | void;
 
 export class MysqlConnection {
-  constructor(private _connection: IConnection, private notify: INotify) { /* */ }
+  constructor(private _connection: IConnection) { /* */ }
 
   async generateTs(dir: string) {
     const columns = await this.query<IColumn>('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
@@ -16,7 +16,9 @@ export class MysqlConnection {
     return this.query(`CREATE DATABASE IF NOT EXISTS ??`, [ name ]);
   }
 
-  async multiQuery<T>(sql: string, insertsArray: any[], chunks = 20) {
+  async multiQuery<T>(sql: string, insertsArray: any[], chunks = 20, notify: INotify = null) {
+    const total = Math.ceil(insertsArray.length / chunks);
+    let count = 0;
     for (let i = 0; i < insertsArray.length; i += chunks) {
       let SQL = insertsArray
         .slice(i, i + chunks)
@@ -24,7 +26,11 @@ export class MysqlConnection {
         .join(';\n');
 
       let response = await this.query<T>(SQL);
-      if (this.notify) this.notify(response);
+      if (notify != null) {
+        if (notify(response, `${ count }/${ total }`)) {
+          break;
+        }
+      }
     }
   }
 

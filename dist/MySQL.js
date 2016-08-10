@@ -2,9 +2,8 @@
 const mysql_1 = require('mysql');
 const MysqlConnection_1 = require('./MysqlConnection');
 class MySQL {
-    constructor(config, notify) {
+    constructor(config) {
         this.config = config;
-        this.notify = notify;
         this._connection = mysql_1.createConnection(this.config);
     }
     run(asyncFunction) {
@@ -14,7 +13,7 @@ class MySQL {
             disconnectCallback();
         };
         this._connection.connect(() => {
-            let mysqlConnection = new MysqlConnection_1.MysqlConnection(this._connection, this.notify);
+            let mysqlConnection = new MysqlConnection_1.MysqlConnection(this._connection);
             asyncFunction(mysqlConnection)
                 .then(disconnectCallback, errorCallback);
         });
