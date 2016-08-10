@@ -27,7 +27,7 @@ export class MysqlConnection {
 
       let response = await this.query<T>(SQL);
       if (notify != null) {
-        if (notify(response, `${ count }/${ total }`)) {
+        if (notify(response, `${ ++count }/${ total }`)) {
           break;
         }
       }
