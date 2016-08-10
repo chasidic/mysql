@@ -13,7 +13,7 @@ export class MySQL {
     };
 
     this._connection.connect(() => {
-      let mysqlConnection = new MysqlConnection(this._connection);
+      let mysqlConnection = new MysqlConnection(this._connection, this.notify);
 
       asyncFunction(mysqlConnection)
         .then(disconnectCallback, errorCallback);
@@ -23,5 +23,5 @@ export class MySQL {
     this._connection.on('error', errorCallback);
   }
 
-  constructor(private config: IConnectionConfig) { /* */ }
+  constructor(private config: IConnectionConfig, private notify: (res: any) => void) { /* */ }
 }

@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const mysql_1 = require('mysql');
 const GenerateTypescript_1 = require('./GenerateTypescript');
 class MysqlConnection {
-    constructor(_connection) {
+    constructor(_connection, notify = null) {
         this._connection = _connection;
+        this.notify = notify;
     }
     generateTs(dir) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +32,9 @@ class MysqlConnection {
                     .slice(i, i + chunks)
                     .map(inserts => mysql_1.format(sql, inserts))
                     .join(';\n');
-                yield this.query(SQL);
+                let response = yield this.query(SQL);
+                if (this.notify)
+                    this.notify(response);
             }
         });
     }

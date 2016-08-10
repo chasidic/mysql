@@ -2,7 +2,8 @@
 import { IConnection } from 'mysql';
 export declare class MysqlConnection {
     private _connection;
-    constructor(_connection: IConnection);
+    private notify;
+    constructor(_connection: IConnection, notify?: (res: any) => void);
     generateTs(dir: string): Promise<void>;
     createSchema(name: string): Promise<{}[]>;
     multiQuery<T>(sql: string, insertsArray: any[], chunks?: number): Promise<void>;

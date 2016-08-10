@@ -3,7 +3,7 @@ import { IColumn } from './InformationSchema';
 import { generateTypescript } from './GenerateTypescript';
 
 export class MysqlConnection {
-  constructor(private _connection: IConnection) { /* */ }
+  constructor(private _connection: IConnection, private notify: (res: any) => void = null) { /* */ }
 
   async generateTs(dir: string) {
     const columns = await this.query<IColumn>('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
@@ -21,7 +21,8 @@ export class MysqlConnection {
         .map(inserts => format(sql, inserts))
         .join(';\n');
 
-      await this.query<T>(SQL);
+      let response = await this.query<T>(SQL);
+      if (this.notify) this.notify(response);
     }
   }
 
