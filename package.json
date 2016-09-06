@@ -29,6 +29,6 @@
     "typescript-formatter": "^2.3.0"
   },
   "devDependencies": {
-    "typescript": "^2.1.0-dev.20160802"
+    "typescript": "^2.0.2"
   }
 }
