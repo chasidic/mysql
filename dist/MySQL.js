@@ -1,6 +1,6 @@
 "use strict";
-const mysql_1 = require('mysql');
-const MysqlConnection_1 = require('./MysqlConnection');
+const mysql_1 = require("mysql");
+const MysqlConnection_1 = require("./MysqlConnection");
 class MySQL {
     constructor(config) {
         this.config = config;

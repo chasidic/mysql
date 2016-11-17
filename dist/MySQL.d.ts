@@ -1,4 +1,3 @@
-/// <reference types="bluebird" />
 import { IConnectionConfig } from 'mysql';
 import { MysqlConnection } from './MysqlConnection';
 export declare class MySQL {

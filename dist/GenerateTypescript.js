@@ -2,14 +2,14 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-const typescript_formatter_1 = require('typescript-formatter');
-const fs_extra_promise_1 = require('fs-extra-promise');
-const path_1 = require('path');
+const typescript_formatter_1 = require("typescript-formatter");
+const fs_extra_promise_1 = require("fs-extra-promise");
+const path_1 = require("path");
 const INDEX = 'index.d.ts';
 function mapSchemas(columns) {
     let schemas = {};

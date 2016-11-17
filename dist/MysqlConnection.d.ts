@@ -1,4 +1,3 @@
-/// <reference types="bluebird" />
 import { IConnection } from 'mysql';
 export declare type INotify = (response: any, progress: string) => boolean | void;
 export declare class MysqlConnection {
