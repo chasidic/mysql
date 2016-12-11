@@ -26,9 +26,10 @@
     "@types/mysql": "0.0.30",
     "fs-extra-promise": "^0.4.1",
     "mysql": "^2.12.0",
+    "tslib": "^1.2.0",
     "typescript-formatter": "^4.0.1"
   },
   "devDependencies": {
-    "typescript": "^2.0.10"
+    "typescript": "^2.1.4"
   }
 }

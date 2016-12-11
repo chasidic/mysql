@@ -1,12 +1,5 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
-    });
-};
+const tslib_1 = require("tslib");
 const typescript_formatter_1 = require("typescript-formatter");
 const fs_extra_promise_1 = require("fs-extra-promise");
 const path_1 = require("path");
@@ -80,7 +73,7 @@ function normalizeTableName(table) {
 }
 exports.normalizeTableName = normalizeTableName;
 function writeTypescriptFile(filename, output) {
-    return __awaiter(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let result = yield typescript_formatter_1.processString('', output.trim(), {
             replace: false,
             verify: false,
@@ -94,7 +87,7 @@ function writeTypescriptFile(filename, output) {
     });
 }
 function generateTypescript(columns, dir) {
-    return __awaiter(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const DIR = path_1.resolve(dir);
         yield fs_extra_promise_1.removeAsync(DIR);
         yield fs_extra_promise_1.ensureDirAsync(DIR);
