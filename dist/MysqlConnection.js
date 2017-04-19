@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const mysql_1 = require("mysql");
 const GenerateTypescript_1 = require("./GenerateTypescript");

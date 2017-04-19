@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const typescript_formatter_1 = require("typescript-formatter");
 const fs_extra_promise_1 = require("fs-extra-promise");
@@ -12,6 +13,7 @@ function mapSchemas(columns) {
         let optional = column.IS_NULLABLE === 'YES' ? '?' : '';
         let name = column.COLUMN_NAME;
         if (column.EXTRA) {
+            // console.log(column.COLUMN_NAME, column.EXTRA);
         }
         let kv = 'any';
         switch (column.DATA_TYPE) {
@@ -80,7 +82,11 @@ function writeTypescriptFile(filename, output) {
             tsconfig: false,
             tslint: false,
             editorconfig: false,
-            tsfmt: true
+            tsfmt: true,
+            tsconfigFile: null,
+            tslintFile: null,
+            tsfmtFile: null,
+            vscode: false
         });
         yield fs_extra_promise_1.ensureDirAsync(path_1.dirname(filename));
         yield fs_extra_promise_1.writeFileAsync(filename, result.dest, { encoding: 'utf-8' });

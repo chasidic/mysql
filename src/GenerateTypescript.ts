@@ -103,7 +103,11 @@ async function writeTypescriptFile (filename: string, output: string) {
     tsconfig: false,
     tslint: false,
     editorconfig: false,
-    tsfmt: true
+    tsfmt: true,
+    tsconfigFile: null,
+    tslintFile: null,
+    tsfmtFile: null,
+    vscode: false
   });
 
   await ensureDirAsync(dirname(filename));
