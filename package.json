@@ -16,21 +16,21 @@
     "minor": "npm version minor && npm publish",
     "patch": "npm version patch && npm publish",
     "postpublish": "git push origin master --follow-tags",
-    "prepublish": "npm run build -s",
+    "prepublishOnly": "npm run build -s",
     "tsc:watch": "npm run build -- --watch"
   },
   "author": "Ilan Frumer <ilanfrumer@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/fs-extra": "^2.1.0",
-    "@types/fs-extra-promise": "0.0.32",
-    "@types/mysql": "0.0.31",
+    "@types/fs-extra": "^3.0.3",
+    "@types/fs-extra-promise": "1.0.1",
+    "@types/mysql": "0.0.33",
     "fs-extra-promise": "^1.0.1",
     "mysql": "^2.13.0",
-    "tslib": "^1.6.0",
-    "typescript-formatter": "^5.1.3"
+    "tslib": "^1.7.1",
+    "typescript-formatter": "^5.2.0"
   },
   "devDependencies": {
-    "typescript": "^2.2.2"
+    "typescript": "^2.3.4"
   }
 }
