@@ -22,11 +22,11 @@ class MysqlConnection {
         const total = Math.ceil(insertsArray.length / chunks);
         let count = 0;
         for (let i = 0; i < insertsArray.length; i += chunks) {
-            let SQL = insertsArray
+            const SQL = insertsArray
                 .slice(i, i + chunks)
                 .map(inserts => mysql_1.format(sql, inserts))
                 .join(';\n');
-            let response = await this.query(SQL);
+            const response = await this.query(SQL);
             if (notify != null) {
                 if (notify(response, `${++count}/${total}`)) {
                     break;
@@ -38,13 +38,15 @@ class MysqlConnection {
         console.log(mysql_1.format(sql, inserts));
     }
     async query(sql, inserts = []) {
-        let SQL = mysql_1.format(sql, inserts);
+        const SQL = mysql_1.format(sql, inserts);
         return new Promise((resolve, reject) => {
             this._connection.query(SQL, (err, results) => {
-                if (err)
+                if (err) {
                     reject(err);
-                else
+                }
+                else {
                     resolve(results);
+                }
             });
         });
     }

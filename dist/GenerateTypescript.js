@@ -5,12 +5,12 @@ const fs_extra_promise_1 = require("fs-extra-promise");
 const path_1 = require("path");
 const INDEX = 'index.d.ts';
 function mapSchemas(columns) {
-    let schemas = {};
-    for (let column of columns) {
+    const schemas = {};
+    for (const column of columns) {
         schemas[column.TABLE_SCHEMA] = schemas[column.TABLE_SCHEMA] || {};
         schemas[column.TABLE_SCHEMA][column.TABLE_NAME] = schemas[column.TABLE_SCHEMA][column.TABLE_NAME] || [];
-        let optional = column.IS_NULLABLE === 'YES' ? ' | null' : '';
-        let name = column.COLUMN_NAME;
+        const optional = column.IS_NULLABLE === 'YES' ? ' | null' : '';
+        const name = column.COLUMN_NAME;
         if (column.EXTRA) {
             // console.log(column.COLUMN_NAME, column.EXTRA);
         }
@@ -45,7 +45,7 @@ function mapSchemas(columns) {
                 kv = 'Blob';
                 break;
             case 'set':
-                let enums = column.COLUMN_TYPE
+                const enums = column.COLUMN_TYPE
                     .replace(/(set|[\(\)])/g, '')
                     .replace(/,/g, ' | ')
                     .replace(/'/g, '"');
@@ -62,7 +62,7 @@ function mapSchemas(columns) {
                 break;
             default:
         }
-        let type = `${column.COLUMN_NAME}: ${kv};`;
+        const type = `${column.COLUMN_NAME}: ${kv}${optional};`;
         schemas[column.TABLE_SCHEMA][column.TABLE_NAME].push({ name, type });
     }
     return schemas;
@@ -74,7 +74,7 @@ function normalizeTableName(table) {
 }
 exports.normalizeTableName = normalizeTableName;
 async function writeTypescriptFile(filename, output) {
-    let result = await typescript_formatter_1.processString('', output.trim(), {
+    const result = await typescript_formatter_1.processString('', output.trim(), {
         replace: false,
         verify: false,
         tsconfig: false,
@@ -94,11 +94,13 @@ async function generateTypescript(columns, dir) {
     const DIR = path_1.resolve(dir);
     await fs_extra_promise_1.removeAsync(DIR);
     await fs_extra_promise_1.ensureDirAsync(DIR);
-    let schemas = mapSchemas(columns);
-    for (let schema in schemas) {
+    const schemas = mapSchemas(columns);
+    // tslint:disable-next-line:forin
+    for (const schema in schemas) {
         const schemaDir = path_1.resolve(DIR, schema);
         let outputInterfaces = '';
-        for (let table in schemas[schema]) {
+        // tslint:disable-next-line:forin
+        for (const table in schemas[schema]) {
             const interfaceName = normalizeTableName(table);
             const interfaceContent = schemas[schema][table].map(col => col.type).join('\n');
             outputInterfaces += `

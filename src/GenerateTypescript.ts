@@ -19,14 +19,14 @@ interface ISchemasMap {
 }
 
 function mapSchemas (columns: IColumn[]) {
-  let schemas: ISchemasMap = {};
+  const schemas: ISchemasMap = {};
 
-  for (let column of columns) {
+  for (const column of columns) {
     schemas[column.TABLE_SCHEMA] = schemas[column.TABLE_SCHEMA] || {};
     schemas[column.TABLE_SCHEMA][column.TABLE_NAME] = schemas[column.TABLE_SCHEMA][column.TABLE_NAME] || [];
 
-    let optional = column.IS_NULLABLE === 'YES' ? ' | null' : '';
-    let name = column.COLUMN_NAME;
+    const optional = column.IS_NULLABLE === 'YES' ? ' | null' : '';
+    const name = column.COLUMN_NAME;
 
     if (column.EXTRA) {
       // console.log(column.COLUMN_NAME, column.EXTRA);
@@ -64,7 +64,7 @@ function mapSchemas (columns: IColumn[]) {
         kv = 'Blob';
         break;
       case 'set':
-        let enums = column.COLUMN_TYPE
+        const enums = column.COLUMN_TYPE
           .replace(/(set|[\(\)])/g, '')
           .replace(/,/g, ' | ')
           .replace(/'/g, '"');
@@ -83,7 +83,7 @@ function mapSchemas (columns: IColumn[]) {
         // console.log(column);
     }
 
-    let type = `${ column.COLUMN_NAME }: ${ kv };`;
+    const type = `${ column.COLUMN_NAME }: ${ kv }${optional};`;
     schemas[column.TABLE_SCHEMA][column.TABLE_NAME].push({ name, type });
   }
 
@@ -97,7 +97,7 @@ export function normalizeTableName(table: string): string {
 }
 
 async function writeTypescriptFile (filename: string, output: string) {
-  let result = await processString('', output.trim(), {
+  const result = await processString('', output.trim(), {
     replace: false,
     verify: false,
     tsconfig: false,
@@ -120,14 +120,16 @@ export async function generateTypescript (columns: IColumn[], dir: string) {
   await removeAsync(DIR);
   await ensureDirAsync(DIR);
 
-  let schemas = mapSchemas(columns);
+  const schemas = mapSchemas(columns);
 
-  for (let schema in schemas) {
+  // tslint:disable-next-line:forin
+  for (const schema in schemas) {
     const schemaDir = resolve(DIR, schema);
 
     let outputInterfaces = '';
 
-    for (let table in schemas[schema]) {
+    // tslint:disable-next-line:forin
+    for (const table in schemas[schema]) {
 
       const interfaceName = normalizeTableName(table);
       const interfaceContent = schemas[schema][table].map(col => col.type).join('\n');
