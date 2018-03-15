@@ -107,7 +107,8 @@ async function writeTypescriptFile (filename: string, output: string) {
     tsconfigFile: null,
     tslintFile: null,
     tsfmtFile: null,
-    vscode: false
+    vscode: false,
+    vscodeFile: null
   });
 
   await ensureDirAsync(dirname(filename));
@@ -149,4 +150,4 @@ export async function generateTypescript (columns: IColumn[], dir: string) {
       export { ${ schema } };
     ` ).join('') }
   `);
-};
+}

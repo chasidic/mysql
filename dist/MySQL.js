@@ -8,13 +8,13 @@ class MySQL {
         this._connection = mysql_1.createConnection(this.config);
     }
     run(asyncFunction) {
-        let disconnectCallback = () => this._connection.destroy();
-        let errorCallback = (err) => {
+        const disconnectCallback = () => this._connection.destroy();
+        const errorCallback = (err) => {
             console.log(err);
             disconnectCallback();
         };
         this._connection.connect(() => {
-            let mysqlConnection = new MysqlConnection_1.MysqlConnection(this._connection);
+            const mysqlConnection = new MysqlConnection_1.MysqlConnection(this._connection);
             asyncFunction(mysqlConnection)
                 .then(disconnectCallback, errorCallback);
         });

@@ -84,7 +84,8 @@ async function writeTypescriptFile(filename, output) {
         tsconfigFile: null,
         tslintFile: null,
         tsfmtFile: null,
-        vscode: false
+        vscode: false,
+        vscodeFile: null
     });
     await fs_extra_promise_1.ensureDirAsync(path_1.dirname(filename));
     await fs_extra_promise_1.writeFileAsync(filename, result.dest, { encoding: 'utf-8' });
@@ -117,4 +118,3 @@ async function generateTypescript(columns, dir) {
   `);
 }
 exports.generateTypescript = generateTypescript;
-;

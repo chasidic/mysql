@@ -1,19 +1,19 @@
-import { createConnection, IConnectionConfig } from 'mysql';
+import { createConnection, ConnectionConfig } from 'mysql';
 import { MysqlConnection } from './MysqlConnection';
 
 export class MySQL {
   private _connection = createConnection(this.config);
   run(asyncFunction: (connection: MysqlConnection) => Promise<void>) {
 
-    let disconnectCallback = () => this._connection.destroy();
+    const disconnectCallback = () => this._connection.destroy();
 
-    let errorCallback = (err: string) => {
+    const errorCallback = (err: string) => {
       console.log(err);
       disconnectCallback();
     };
 
     this._connection.connect(() => {
-      let mysqlConnection = new MysqlConnection(this._connection);
+      const mysqlConnection = new MysqlConnection(this._connection);
 
       asyncFunction(mysqlConnection)
         .then(disconnectCallback, errorCallback);
@@ -23,5 +23,5 @@ export class MySQL {
     this._connection.on('error', errorCallback);
   }
 
-  constructor(private config: IConnectionConfig) { /* */ }
+  constructor(private config: ConnectionConfig) { /* */ }
 }
