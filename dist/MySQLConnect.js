@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const MysqlConnection_1 = require("./MysqlConnection");
 const mysql_1 = require("mysql");
-class MysqlConnect extends MysqlConnection_1.MysqlConnection {
+class MySQLConnect extends MysqlConnection_1.MysqlConnection {
     constructor(config, errorCallback) {
         const connection = mysql_1.createConnection(config);
         connection.connect();
@@ -12,4 +12,4 @@ class MysqlConnect extends MysqlConnection_1.MysqlConnection {
         super(connection);
     }
 }
-exports.MysqlConnect = MysqlConnect;
+exports.MySQLConnect = MySQLConnect;

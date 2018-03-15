@@ -1,7 +1,7 @@
 import { MysqlConnection } from './MysqlConnection';
 import { createConnection, ConnectionConfig } from 'mysql';
 
-export class MysqlConnect extends MysqlConnection {
+export class MySQLConnect extends MysqlConnection {
     constructor(config: ConnectionConfig, errorCallback?: (err: string) => void) {
         const connection = createConnection(config);
         connection.connect();
