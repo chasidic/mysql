@@ -22,15 +22,15 @@
   "author": "Ilan Frumer <ilanfrumer@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/fs-extra": "^3.0.3",
-    "@types/fs-extra-promise": "1.0.1",
-    "@types/mysql": "0.0.33",
+    "@types/fs-extra": "^5.0.1",
+    "@types/fs-extra-promise": "1.0.4",
+    "@types/mysql": "2.15.3",
     "fs-extra-promise": "^1.0.1",
-    "mysql": "^2.13.0",
-    "tslib": "^1.7.1",
-    "typescript-formatter": "^5.2.0"
+    "mysql": "^2.15.0",
+    "tslib": "^1.9.0",
+    "typescript-formatter": "^7.1.0"
   },
   "devDependencies": {
-    "typescript": "^2.3.4"
+    "typescript": "^2.7.2"
   }
 }

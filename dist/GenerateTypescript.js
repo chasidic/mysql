@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const typescript_formatter_1 = require("typescript-formatter");
 const fs_extra_promise_1 = require("fs-extra-promise");
 const path_1 = require("path");
@@ -74,52 +73,48 @@ function normalizeTableName(table) {
         .replace(/_([a-z])/ig, (m, m1) => m1.toUpperCase());
 }
 exports.normalizeTableName = normalizeTableName;
-function writeTypescriptFile(filename, output) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        let result = yield typescript_formatter_1.processString('', output.trim(), {
-            replace: false,
-            verify: false,
-            tsconfig: false,
-            tslint: false,
-            editorconfig: false,
-            tsfmt: true,
-            tsconfigFile: null,
-            tslintFile: null,
-            tsfmtFile: null,
-            vscode: false
-        });
-        yield fs_extra_promise_1.ensureDirAsync(path_1.dirname(filename));
-        yield fs_extra_promise_1.writeFileAsync(filename, result.dest, { encoding: 'utf-8' });
+async function writeTypescriptFile(filename, output) {
+    let result = await typescript_formatter_1.processString('', output.trim(), {
+        replace: false,
+        verify: false,
+        tsconfig: false,
+        tslint: false,
+        editorconfig: false,
+        tsfmt: true,
+        tsconfigFile: null,
+        tslintFile: null,
+        tsfmtFile: null,
+        vscode: false
     });
+    await fs_extra_promise_1.ensureDirAsync(path_1.dirname(filename));
+    await fs_extra_promise_1.writeFileAsync(filename, result.dest, { encoding: 'utf-8' });
 }
-function generateTypescript(columns, dir) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        const DIR = path_1.resolve(dir);
-        yield fs_extra_promise_1.removeAsync(DIR);
-        yield fs_extra_promise_1.ensureDirAsync(DIR);
-        let schemas = mapSchemas(columns);
-        for (let schema in schemas) {
-            const schemaDir = path_1.resolve(DIR, schema);
-            let outputInterfaces = '';
-            for (let table in schemas[schema]) {
-                const interfaceName = normalizeTableName(table);
-                const interfaceContent = schemas[schema][table].map(col => col.type).join('\n');
-                outputInterfaces += `
+async function generateTypescript(columns, dir) {
+    const DIR = path_1.resolve(dir);
+    await fs_extra_promise_1.removeAsync(DIR);
+    await fs_extra_promise_1.ensureDirAsync(DIR);
+    let schemas = mapSchemas(columns);
+    for (let schema in schemas) {
+        const schemaDir = path_1.resolve(DIR, schema);
+        let outputInterfaces = '';
+        for (let table in schemas[schema]) {
+            const interfaceName = normalizeTableName(table);
+            const interfaceContent = schemas[schema][table].map(col => col.type).join('\n');
+            outputInterfaces += `
         export interface ${interfaceName} {
           ${interfaceContent}
         }
       `;
-            }
-            yield fs_extra_promise_1.ensureDirAsync(schemaDir);
-            yield writeTypescriptFile(path_1.join(schemaDir, INDEX), outputInterfaces);
         }
-        yield writeTypescriptFile(path_1.join(DIR, INDEX), `
+        await fs_extra_promise_1.ensureDirAsync(schemaDir);
+        await writeTypescriptFile(path_1.join(schemaDir, INDEX), outputInterfaces);
+    }
+    await writeTypescriptFile(path_1.join(DIR, INDEX), `
     ${Object.keys(schemas).map(schema => `
       import * as ${schema} from './${schema}';
       export { ${schema} };
     `).join('')}
   `);
-    });
 }
 exports.generateTypescript = generateTypescript;
 ;
