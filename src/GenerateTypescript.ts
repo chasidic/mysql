@@ -25,7 +25,7 @@ function mapSchemas (columns: IColumn[]) {
     schemas[column.TABLE_SCHEMA] = schemas[column.TABLE_SCHEMA] || {};
     schemas[column.TABLE_SCHEMA][column.TABLE_NAME] = schemas[column.TABLE_SCHEMA][column.TABLE_NAME] || [];
 
-    let optional = column.IS_NULLABLE === 'YES' ? '?' : '';
+    let optional = column.IS_NULLABLE === 'YES' ? ' | null' : '';
     let name = column.COLUMN_NAME;
 
     if (column.EXTRA) {
@@ -83,7 +83,7 @@ function mapSchemas (columns: IColumn[]) {
         // console.log(column);
     }
 
-    let type = `${ column.COLUMN_NAME }${ optional }: ${ kv };`;
+    let type = `${ column.COLUMN_NAME }: ${ kv };`;
     schemas[column.TABLE_SCHEMA][column.TABLE_NAME].push({ name, type });
   }
 
