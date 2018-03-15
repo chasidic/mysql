@@ -13,6 +13,11 @@ class MysqlConnection {
     async createSchema(name) {
         return this.query(`CREATE DATABASE IF NOT EXISTS ??`, [name]);
     }
+    async transaction(run) {
+        return new Promise((resolve, reject) => {
+            this._connection.beginTransaction((err) => err ? reject(err) : run().then(() => this._connection.commit(e => e ? reject(e) : resolve()), () => this._connection.rollback(e => e ? reject(e) : resolve())));
+        });
+    }
     async multiQuery(sql, insertsArray, chunks = 20, notify = null) {
         const total = Math.ceil(insertsArray.length / chunks);
         let count = 0;

@@ -1,5 +1,5 @@
 import { MysqlConnection } from './MysqlConnection';
-import { createConnection, ConnectionConfig } from 'mysql';
+import { createConnection, ConnectionConfig, MysqlError } from 'mysql';
 
 export class MySQLConnect extends MysqlConnection {
     constructor(config: ConnectionConfig, errorCallback?: (err: string) => void) {
@@ -9,5 +9,9 @@ export class MySQLConnect extends MysqlConnection {
             connection.on('error', errorCallback);
         }
         super(connection);
+    }
+
+    end(callback?: (err: MysqlError, ...args: any[]) => void) {
+        this._connection.end(callback);
     }
 }

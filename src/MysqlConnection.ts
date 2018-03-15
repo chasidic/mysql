@@ -5,7 +5,7 @@ import { generateTypescript } from './GenerateTypescript';
 export type INotify = (response: any, progress: string) => boolean | void;
 
 export class MysqlConnection {
-  constructor(private _connection: Connection) { /* */ }
+  constructor(protected _connection: Connection) { /* */ }
 
   async generateTs(dir: string) {
     const columns = await this.query<IColumn>('SELECT * FROM INFORMATION_SCHEMA.COLUMNS');
@@ -14,6 +14,17 @@ export class MysqlConnection {
 
   async createSchema(name: string) {
     return this.query(`CREATE DATABASE IF NOT EXISTS ??`, [ name ]);
+  }
+
+  async transaction(run: () => Promise<void>) {
+    return new Promise<void>((resolve, reject) => {
+      this._connection.beginTransaction((err) =>
+        err ? reject(err) : run().then(
+          () => this._connection.commit(e =>  e ? reject(e) : resolve()),
+          () => this._connection.rollback(e =>  e ? reject(e) : resolve())
+        )
+      );
+    });
   }
 
   async multiQuery<T>(sql: string, insertsArray: any[], chunks = 20, notify: INotify = null) {

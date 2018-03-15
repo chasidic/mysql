@@ -11,5 +11,8 @@ class MySQLConnect extends MysqlConnection_1.MysqlConnection {
         }
         super(connection);
     }
+    end(callback) {
+        this._connection.end(callback);
+    }
 }
 exports.MySQLConnect = MySQLConnect;
